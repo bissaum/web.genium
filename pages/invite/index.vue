@@ -1,18 +1,22 @@
 <template lang="pug">
 Card.invite
   p(slot="title") Convidar
-  Form(:model="formInvite" :rules="ruleInvite" label-position="top")
 
-    FormItem(label="E-mail")
-      Input(v-model="formInvite.email" size="large" placeholder="Informe o e-mail")
+  Form(ref="validateInvite" :model="formInvite" :rules="ruleInvite" label-position="top")
+
+    FormItem(label="E-mail" prop="email")
+      Input(v-model="formInvite.email" type="email" size="large" placeholder="Informe o e-mail")
 
     Row(type="flex" justify="end")
-      Button(type="primary" size="large") Enviar
+      Button(@click="submitInvite()" type="primary" size="large") Enviar convite
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+
+import iView from 'iview'
+Vue.use(iView)
 
 interface typeInvite {
   email: String | Array<typeRule>
@@ -38,6 +42,18 @@ export default class SignIn extends Vue {
       { required: true, message: 'Informe um e-mail', trigger: 'blur' },
       { type: 'email', message: 'E-mail é inválido', trigger: 'blur' }
     ]
+  }
+
+  public submitInvite() {
+    const form = this.$refs.validateInvite as any
+
+    form.validate((valid: Boolean) => {
+      if (valid) {
+        this.$Message.success('Success!')
+      } else {
+        this.$Message.error('Fail!')
+      }
+    })
   }
 }
 </script>

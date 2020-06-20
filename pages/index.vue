@@ -4,11 +4,10 @@
     logo
 
     h1.title(v-text="title")
-    h2.subtitle My wondrous Nuxt.js project
+    h2.subtitle Versão web da aplicação
 
     .links
-      a.button--green(href="https://nuxtjs.org/" target="_blank") Documentation
-      a.button--grey(href="https://github.com/nuxt/nuxt.js" target="_blank") GitHub
+      a.button--green(href="/invite") Documentation
 </template>
 
 <script lang="ts">
@@ -17,16 +16,13 @@ import Component from 'vue-class-component'
 import Logo from '@/components/Logo.vue'
 
 @Component({
+  layout: 'default',
   components: {
     Logo
   }
 })
 export default class Index extends Vue {
-  data() {
-    return {
-      title: 'genium-nuxt'
-    }
-  }
+  public title: string = 'web.genium'
 }
 </script>
 

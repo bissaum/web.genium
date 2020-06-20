@@ -1,5 +1,5 @@
 {
-  "name": "web.genium",
+  "name": "Genium",
   "version": "1.0.0",
   "description": "Versão web da aplicação",
   "author": "bissaum <bissaum@gmail.com>",
@@ -17,7 +17,8 @@
     "@nuxt/typescript-runtime": "^0.4.0",
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
-    "nuxt": "^2.0.0"
+    "nuxt": "^2.0.0",
+    "iview": "^3.5.4"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6.0",

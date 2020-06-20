@@ -14,12 +14,12 @@ export default {
         content: process.env.npm_package_description || ''
       }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }]
   },
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
+  loading: { color: '#3B8070' },
   /*
    ** Global CSS
    */
@@ -53,10 +53,16 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, { isDev }) {
-      if (isDev) {
+    extend(config, { isDev, isClient }) {
+      if (isDev && isClient) {
         config.mode = 'development'
         config.devtool = 'source-map'
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/
+        })
       }
     }
   }

@@ -1,7 +1,14 @@
 <template lang="pug">
 div
+  h1 teste
   nuxt
 </template>
+
+<script lang="ts">
+export default {
+  name: 'Default'
+}
+</script>
 
 <style lang="sass">
 html

@@ -5,11 +5,11 @@ Card
   Form(ref="validateIndex" :model="formIndex" :rules="ruleIndex" label-position="left" :label-width="70")
 
     FormItem(label="E-mail" prop="email")
-      Input(v-model="formIndex.email" type="email" size="large" placeholder="Informe o e-mail")
+      Input(v-model="formIndex.email" type="email" size="large" placeholder="Informe o e-mail" autofocus)
 
     FormItem
       Row(type="flex" justify="space-between")
-        Button(@click="submitIndex()" type="primary" size="large") Entrar
+        Button(@click="submitIndex" type="primary" size="large") Entrar
         Checkbox(v-model="rememberEmail" size="large") Lembrar e-mail
 
     Divider
@@ -46,10 +46,18 @@ interface optionsRule {
   layout: 'auth'
 })
 export default class Index extends Vue {
-  public rememberEmail: boolean = !!(process.browser && localStorage.email)
+  created() {
+    if (process.browser) {
+      if (localStorage.rememberEmail === 'true') {
+        this.$router.push('/auth/sign-in')
+      }
+    }
+  }
+
+  public rememberEmail: boolean = false
 
   public formIndex: typeIndex = {
-    email: process.browser ? localStorage.email : ''
+    email: ''
   }
 
   public ruleIndex: typeRule = {
@@ -64,13 +72,8 @@ export default class Index extends Vue {
 
     form.validate((valid: boolean) => {
       if (valid) {
-        if (this.rememberEmail) {
-          localStorage.email = this.formIndex.email
-          this.$Message.success('Seu e-mail será lembrado')
-        } else {
-          localStorage.email = ''
-        }
-
+        localStorage.rememberEmail = this.rememberEmail
+        localStorage.email = this.formIndex.email
         this.$router.push('/auth/sign-in')
       }
     })

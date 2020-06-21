@@ -18,12 +18,12 @@ Layout.auth
 import Vue from 'vue'
 import Component from 'vue-class-component'
 
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
+import ViewUI from 'view-design'
+import 'view-design/dist/styles/iview.css'
 
 import Logo from '@/components/Logo.vue'
 
-Vue.use(iView)
+Vue.use(ViewUI)
 
 @Component({
   layout: 'auth',

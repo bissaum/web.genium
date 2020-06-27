@@ -1,15 +1,37 @@
 <template lang="pug">
 Card
-  p(slot="title") Renovar senha
+  p(slot="title") Lembrar senha
 
-  Form(ref="validateForgot" :model="formForgot" :rules="ruleForgot" label-position="left" :label-width="70")
+  Form(
+    :label-width="100"
+    :model="model"
+    :rules="rules"
+    label-position="left"
+    ref="form"
+  )
 
     FormItem(label="E-mail" prop="email")
-      Input(v-model="formForgot.email" type="email" size="large" placeholder="Informe o e-mail")
+      Input(
+        @keyup.enter.native="submitForgot"
+        placeholder="Informe o e-mail"
+        ref="email"
+        size="large"
+        type="email"
+        v-model="model.email"
+      )
 
-    Row(type="flex" justify="space-between")
-      Button(@click="$router.push('/auth')" type="text" size="large") Cancelar
-      Button(@click="submitForgot()" type="primary" size="large") Enviar
+    FormItem
+      Row(type="flex" justify="space-between")
+        Button(
+          @click="$router.push('/auth/sign-in')"
+          size="large"
+        ) Cancelar
+
+        Button(
+          @click="submitForgot"
+          type="primary"
+          size="large"
+        ) Enviar
 </template>
 
 <script lang="ts">
@@ -20,39 +42,54 @@ import ViewUI from 'view-design'
 Vue.use(ViewUI)
 
 interface typeForgot {
-  email: String | Array<typeRule>
+  email: string
 }
 
 interface typeRule {
-  required?: Boolean
-  type?: String
-  message: String
-  trigger: String
+  email: Array<optionsRule>
+}
+
+interface optionsRule {
+  required?: boolean
+  type?: string
+  message: string
+  trigger: string
 }
 
 @Component({
   layout: 'auth'
 })
 export default class Forgot extends Vue {
-  public formForgot: typeForgot = {
-    email: ''
+  public model: typeForgot = {
+    email: process.browser ? localStorage.email : ''
   }
 
-  public ruleForgot: typeForgot = {
+  public rules: typeRule = {
     email: [
-      { required: true, message: 'Nenhum e-mail informado', trigger: 'blur' },
-      { type: 'email', message: 'E-mail inválido', trigger: 'blur' }
+      {
+        required: true,
+        message: 'Nenhum e-mail informado',
+        trigger: 'blur'
+      },
+      {
+        type: 'email',
+        message: 'E-mail inválido',
+        trigger: 'blur'
+      }
     ]
   }
 
-  public submitForgot() {
-    const form = this.$refs.validateForgot as any
+  mounted() {
+    const email = this.$refs.email as HTMLElement
+    email.focus()
+  }
 
-    form.validate((valid: Boolean) => {
+  public submitForgot() {
+    const form = this.$refs.form as HTMLFormElement
+
+    form.validate((valid: boolean) => {
       if (valid) {
-        this.$Message.success('E-mail foi enviado')
-      } else {
-        this.$Message.error('E-mail não enviado')
+        this.$router.push('/home')
       }
     })
   }

@@ -2,14 +2,35 @@
 Card
   p(slot="title") Enviar convite
 
-  Form(ref="validateInvite" :model="formInvite" :rules="ruleInvite" label-position="left" :label-width="70")
+  Form(
+    :label-width="70"
+    :model="model"
+    :rules="rules"
+    label-position="left"
+    ref="form"
+  )
 
     FormItem(label="E-mail" prop="email")
-      Input(v-model="formInvite.email" type="email" size="large" placeholder="Informe o e-mail")
+      Input(
+        @keyup.enter.native="submitInvite"
+        placeholder="Informe o e-mail"
+        ref="email"
+        size="large"
+        type="email"
+        v-model="model.email"
+      )
 
     Row(type="flex" justify="space-between")
-      Button(@click="$router.push('/auth')" type="text" size="large") Cancelar
-      Button(@click="submitInvite()" type="primary" size="large") Enviar
+      Button(
+        @click="$router.push('/auth')"
+        size="large"
+      ) Cancelar
+
+      Button(
+        @click="submitInvite()"
+        type="primary"
+        size="large"
+      ) Enviar
 </template>
 
 <script lang="ts">
@@ -20,35 +41,52 @@ import ViewUI from 'view-design'
 Vue.use(ViewUI)
 
 interface typeInvite {
-  email: String | Array<typeRule>
+  email: string
 }
 
 interface typeRule {
-  required?: Boolean
-  type?: String
-  message: String
-  trigger: String
+  email: Array<optionsRule>
+}
+
+interface optionsRule {
+  required?: boolean
+  type?: string
+  message: string
+  trigger: string
 }
 
 @Component({
   layout: 'auth'
 })
 export default class Invite extends Vue {
-  public formInvite: typeInvite = {
+  public model: typeInvite = {
     email: ''
   }
 
-  public ruleInvite: typeInvite = {
+  public rules: typeRule = {
     email: [
-      { required: true, message: 'Nenhum e-mail informado', trigger: 'blur' },
-      { type: 'email', message: 'E-mail inválido', trigger: 'blur' }
+      {
+        required: true,
+        message: 'Nenhum e-mail informado',
+        trigger: 'blur'
+      },
+      {
+        type: 'email',
+        message: 'E-mail inválido',
+        trigger: 'blur'
+      }
     ]
   }
 
-  public submitInvite() {
-    const form = this.$refs.validateInvite as any
+  mounted() {
+    const email = this.$refs.email as HTMLElement
+    email.focus()
+  }
 
-    form.validate((valid: Boolean) => {
+  public submitInvite() {
+    const form = this.$refs.form as any
+
+    form.validate((valid: boolean) => {
       if (valid) {
         this.$Message.success('Convite foi enviado')
       } else {

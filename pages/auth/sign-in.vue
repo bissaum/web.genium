@@ -2,7 +2,13 @@
 Card
   p(slot="title") Entrar
 
-  Form(ref="validateSignIn" :model="formSignIn" :rules="ruleSignIn" label-position="left" :label-width="70")
+  Form(
+    :label-width="100"
+    :model="model"
+    :rules="rules"
+    label-position="left"
+    ref="form"
+  )
 
     FormItem(label="E-mail")
       Row(type="flex" justify="space-between")
@@ -10,12 +16,26 @@ Card
         a(@click="anotherEmail") Outro e-mail
 
     FormItem(label="Senha" prop="password")
-      Input(v-model="formSignIn.password" type="password" size="large" password placeholder="Informe a senha" autofocus)
+      Input(
+        password
+        placeholder="Informe a senha"
+        ref="password"
+        size="large"
+        type="password"
+        v-model="model.password"
+      )
 
     FormItem
       Row(type="flex" justify="space-between")
-        Button(@click="submitSignIn" type="primary" size="large") Entrar
-        Button(@click="$router.push('/auth/forgot')" type="text" size="large") Esqueci a senha
+        Button(
+          @click="$router.push('/auth/forgot')"
+          size="large"
+        ) Esqueci a senha
+        Button(
+          @click="submitSignIn"
+          type="primary"
+          size="large"
+        ) Entrar
 </template>
 
 <script lang="ts">
@@ -48,16 +68,35 @@ interface optionsRule {
 export default class SignIn extends Vue {
   public email: string = process.browser ? localStorage.email : ''
 
-  public formSignIn: typeSignIn = {
+  public model: typeSignIn = {
     password: ''
   }
 
-  public ruleSignIn: typeRule = {
+  public rules: typeRule = {
     password: [
-      { required: true, message: 'Nenhuma senha informada', trigger: 'blur' },
-      { type: 'string', min: 6, message: 'Senha mínima de 6 caracteres', trigger: 'blur' },
-      { type: 'string', max: 8, message: 'Senha máxima de 8 caracteres', trigger: 'blur' }
+      {
+        required: true,
+        message: 'Nenhuma senha informada',
+        trigger: 'blur'
+      },
+      {
+        type: 'string',
+        min: 6,
+        message: 'Senha mínima de 6 caracteres',
+        trigger: 'blur'
+      },
+      {
+        type: 'string',
+        max: 8,
+        message: 'Senha máxima de 8 caracteres',
+        trigger: 'blur'
+      }
     ]
+  }
+
+  mounted() {
+    const password = this.$refs.password as HTMLElement
+    password.focus()
   }
 
   public anotherEmail() {
@@ -66,7 +105,7 @@ export default class SignIn extends Vue {
   }
 
   public submitSignIn() {
-    const form = this.$refs.validateSignIn as any
+    const form = this.$refs.form as HTMLFormElement
 
     form.validate((valid: boolean) => {
       if (valid) {

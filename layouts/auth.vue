@@ -4,7 +4,7 @@ Layout.auth
   Header.header
     Logo
 
-  Content
+  Content.container
     Row.row(type="flex" justify="center" align="middle")
       Col(:xs="24" :sm="20" :md="16" :lg="12" :xl="10")
         nuxt
@@ -41,6 +41,7 @@ export default class SignIn extends Vue {
 
 .auth
   min-height: 100vh
+  background: $background
 
   .header
     height: 10vh
@@ -48,10 +49,13 @@ export default class SignIn extends Vue {
 
   .row
     min-height: 80vh
+    max-width: 1920px
+    margin: 0 auto
     padding: 0 15px
 
   .footer
     height: 10vh
+    background: transparent
 
     p
       text-align: center

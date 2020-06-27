@@ -2,22 +2,57 @@
 Card
   p(slot="title") Entrar
 
-  Form(ref="validateIndex" :model="formIndex" :rules="ruleIndex" label-position="left" :label-width="70")
+  Form(
+    :label-width="100"
+    :model="model"
+    :rules="rules"
+    label-position="left"
+    ref="form"
+  )
 
     FormItem(label="E-mail" prop="email")
-      Input(v-model="formIndex.email" type="email" size="large" placeholder="Informe o e-mail" autofocus)
+      Input(
+        @keyup.enter.native="submitIndex"
+        placeholder="Informe o e-mail"
+        ref="email"
+        size="large"
+        type="email"
+        v-model="model.email"
+      )
 
     FormItem
       Row(type="flex" justify="space-between")
-        Button(@click="submitIndex" type="primary" size="large") Entrar
-        Checkbox(v-model="rememberEmail" size="large") Lembrar e-mail
+        Checkbox(
+          v-model="rememberEmail"
+          size="large"
+        ) Lembrar e-mail
+
+        Button(
+          @click="submitIndex"
+          type="primary"
+          size="large"
+        ) Entrar
 
     Divider
 
     Row(type="flex" justify="space-around")
-      Button.google(icon="logo-google" size="large" shape="circle")
-      Button.facebook(icon="logo-facebook" size="large" shape="circle")
-      Button.twitter(icon="logo-twitter" size="large" shape="circle")
+      Button.google(
+        icon="logo-google"
+        size="large"
+        shape="circle"
+      )
+
+      Button.facebook(
+        icon="logo-facebook"
+        size="large"
+        shape="circle"
+      )
+
+      Button.twitter(
+        icon="logo-twitter"
+        size="large"
+        shape="circle"
+      )
 </template>
 
 <script lang="ts">
@@ -46,34 +81,45 @@ interface optionsRule {
   layout: 'auth'
 })
 export default class Index extends Vue {
-  created() {
+  public rememberEmail: boolean = false
+
+  public model: typeIndex = {
+    email: ''
+  }
+
+  public rules: typeRule = {
+    email: [
+      {
+        required: true,
+        message: 'Nenhum e-mail informado',
+        trigger: 'blur'
+      },
+      {
+        type: 'email',
+        message: 'E-mail inválido',
+        trigger: 'blur'
+      }
+    ]
+  }
+
+  mounted() {
     if (process.browser) {
       if (localStorage.rememberEmail === 'true') {
         this.$router.push('/auth/sign-in')
       }
     }
-  }
 
-  public rememberEmail: boolean = false
-
-  public formIndex: typeIndex = {
-    email: ''
-  }
-
-  public ruleIndex: typeRule = {
-    email: [
-      { required: true, message: 'Nenhum e-mail informado', trigger: 'blur' },
-      { type: 'email', message: 'E-mail inválido', trigger: 'blur' }
-    ]
+    const email = this.$refs.email as HTMLElement
+    email.focus()
   }
 
   public submitIndex() {
-    const form = this.$refs.validateIndex as any
+    const form = this.$refs.form as HTMLFormElement
 
     form.validate((valid: boolean) => {
       if (valid) {
         localStorage.rememberEmail = this.rememberEmail
-        localStorage.email = this.formIndex.email
+        localStorage.email = this.model.email
         this.$router.push('/auth/sign-in')
       }
     })
